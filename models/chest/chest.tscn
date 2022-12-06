@@ -1,0 +1,69 @@
+[gd_scene load_steps=7 format=3 uid="uid://ihm50ln64asv"]
+
+[ext_resource type="PackedScene" uid="uid://beo386hvepuab" path="res://models/chest/chest.glb" id="1_5fmfx"]
+
+[sub_resource type="GDScript" id="GDScript_tw3ha"]
+script/source = "extends Node3D
+
+var inside:bool = false
+
+
+func _on_area_3d_body_entered(body):
+	inside = true
+
+
+func _on_area_3d_body_exited(body):
+	inside = false
+
+func _process(delta):
+	if Input.is_action_just_pressed(\"interact\") and inside:
+		$AnimationPlayer.play(\"open\")
+		
+	
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ro5ru"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_vp2r4"]
+width = 500
+height = 500
+in_3d_space = true
+seamless = true
+seamless_blend_skirt = 1.0
+normalize = false
+noise = SubResource("FastNoiseLite_ro5ru")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a1pab"]
+albedo_color = Color(0.588235, 0.462745, 0.254902, 1)
+albedo_texture = SubResource("NoiseTexture2D_vp2r4")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j4en6"]
+size = Vector3(8.44379, 6.79156, 11.4614)
+
+[node name="chest" instance=ExtResource("1_5fmfx")]
+transform = Transform3D(0.37, 0, 0, 0, 0.37, 0, 0, 0, 0.37, 0, 0, 0)
+script = SubResource("GDScript_tw3ha")
+
+[node name="Armature Gold Chest" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Skeleton3D" parent="Armature Gold Chest" index="0"]
+bones/1/rotation = Quaternion(0.27805, 4.58033e-07, 1.32585e-07, 0.960567)
+bones/2/position = Vector3(0.0382523, 2.06764, 3.2798)
+bones/2/scale = Vector3(1, 1, 1)
+bones/4/position = Vector3(-0.0285278, 2.06562, 3.27896)
+bones/4/rotation = Quaternion(-0.626627, 0.644749, 0.295926, 0.322592)
+bones/4/scale = Vector3(1, 1, 1)
+
+[node name="Gold Chest" parent="Armature Gold Chest/Skeleton3D" index="0"]
+transform = Transform3D(1.00161, 0, 0, 0, 1.00161, 0, 0, 0, 1.00161, 0, 0, 0)
+surface_material_override/3 = SubResource("StandardMaterial3D_a1pab")
+
+[node name="Area3D" type="Area3D" parent="." index="2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.192047, 2.89578, 1.91333)
+shape = SubResource("BoxShape3D_j4en6")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

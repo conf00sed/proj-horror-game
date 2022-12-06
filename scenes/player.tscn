@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://diaxemvrfxtk5"]
+
+[ext_resource type="Script" path="res://scripts/playercontroller.gd" id="1_ftt8v"]
+[ext_resource type="AudioStream" uid="uid://coh7envs6di6s" path="res://assets/walk.mp3" id="2_ntwn6"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_0voym"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_11ts3"]
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_ftt8v")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_0voym")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_11ts3")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75787, 0)
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_ntwn6")
+volume_db = -19.574
+autoplay = true
+doppler_tracking = 2

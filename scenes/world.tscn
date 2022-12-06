@@ -1,0 +1,190 @@
+[gd_scene load_steps=18 format=3 uid="uid://dt70mye8gmpyj"]
+
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_8krka"]
+[ext_resource type="PackedScene" uid="uid://diaxemvrfxtk5" path="res://scenes/player.tscn" id="1_b3hlt"]
+[ext_resource type="PackedScene" uid="uid://dgeows3shuas4" path="res://scenes/mainMenu.tscn" id="2_yr8mu"]
+[ext_resource type="MeshLibrary" uid="uid://ccjby0ygwot01" path="res://models/tileset/tileset.tres" id="3_nm0or"]
+[ext_resource type="PackedScene" uid="uid://c837aypiaxp0s" path="res://models/hand/hand.tscn" id="5_2swun"]
+[ext_resource type="PackedScene" uid="uid://dfd4bo3epaeii" path="res://models/torch/torch.tscn" id="6_yenlt"]
+[ext_resource type="PackedScene" uid="uid://dwe7vkhi0ktqp" path="res://models/hand/RiggedLowpolyHand.glb" id="7_h7v8g"]
+[ext_resource type="PackedScene" uid="uid://ihm50ln64asv" path="res://models/chest/chest.tscn" id="8_ox4xv"]
+[ext_resource type="PackedScene" uid="uid://dkanjtpx27qrb" path="res://util/floatingTooltip.tscn" id="9_fcse5"]
+[ext_resource type="Script" path="res://scenes/jump2.gd" id="10_u3i0o"]
+[ext_resource type="AudioStream" uid="uid://btu5pwguybt5d" path="res://util/running-14658.mp3" id="11_qxrlk"]
+[ext_resource type="AudioStream" uid="uid://bna2gymtctow0" path="res://util/dripping-water-in-cave-114694.mp3" id="12_fq7s2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_w0mgu"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_nudml"]
+sky_material = SubResource("ProceduralSkyMaterial_w0mgu")
+
+[sub_resource type="Environment" id="Environment_b7ipk"]
+background_mode = 2
+sky = SubResource("Sky_nudml")
+ambient_light_color = Color(0.921569, 0.839216, 0.670588, 1)
+ambient_light_sky_contribution = 0.0
+ambient_light_energy = 0.05
+tonemap_mode = 2
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.954332, 0.903518, 0.799967, 1)
+fog_light_energy = 0.02
+fog_density = 0.15
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.02
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_mlcx4"]
+dof_blur_near_enabled = true
+dof_blur_near_distance = 1.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qb5es"]
+size = Vector3(2.67328, 3.64842, 5.88586)
+
+[node name="World" type="Node"]
+script = ExtResource("1_8krka")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MainMenu" parent="CanvasLayer" instance=ExtResource("2_yr8mu")]
+
+[node name="Speedometer" type="PanelContainer" parent="CanvasLayer"]
+visible = false
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 75.0
+grow_vertical = 0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Speedometer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="Label" type="Label" parent="CanvasLayer/Speedometer/MarginContainer"]
+layout_mode = 2
+text = "vel: "
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_b7ipk")
+camera_attributes = SubResource("CameraAttributesPractical_mlcx4")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.75, -0.43301, 0, 1.23387, -1.81201)
+visible = false
+light_energy = 0.0
+
+[node name="OmniLight3D" type="OmniLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.7748, 2.58656, -13.58)
+light_color = Color(0.921569, 0.839216, 0.670588, 1)
+light_energy = 1.622
+light_indirect_energy = 11.349
+light_volumetric_fog_energy = 3.001
+light_specular = 0.0
+omni_range = 8.0
+
+[node name="GridMap" type="GridMap" parent="WorldEnvironment"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh_library = ExtResource("3_nm0or")
+cell_size = Vector3(1, 1, 1)
+cell_center_y = false
+data = {
+"cells": PackedInt32Array(0, 0, 655362, 65535, 0, 655362, 65535, 65535, 655362, 0, 65535, 655362, 65534, 65535, 655362, 65534, 0, 655362, 1, 65535, 655362, 1, 0, 655362, 2, 65535, 3, 2, 0, 1048578, 65533, 65535, 1048579, 65533, 0, 1048578, 65534, 65534, 0, 65535, 65534, 1048579, 0, 65534, 3, 1, 65534, 0, 65533, 65534, 1048577, 2, 65534, 1, 65532, 65535, 1048577, 65532, 0, 1048579, 3, 65535, 1, 3, 0, 3, 65535, 2, 1048576, 0, 2, 1441792, 1, 1, 655360, 65534, 1, 655360, 2, 2, 655361, 65532, 2, 655361, 65533, 2, 1441793, 3, 2, 1441793, 65535, 1, 655363, 0, 1, 1441795, 2, 1, 655363, 65532, 1, 655363, 65533, 1, 1441795, 3, 1, 1441795, 4, 1, 1441793, 65531, 1, 655361, 65531, 0, 1048577, 4, 0, 1, 0, 65533, 1441792, 65535, 65533, 1048576, 0, 65532, 1441792, 65535, 65532, 1048576, 0, 65531, 1441792, 0, 65530, 1441792, 65535, 65531, 1048576, 65535, 65530, 1048576, 0, 65529, 1441792, 65535, 65529, 1048576, 0, 65528, 1441795, 0, 65527, 2, 0, 65526, 3, 65535, 65526, 1048579, 65535, 65527, 2, 65535, 65528, 655363, 1, 65526, 1, 1, 65527, 1441796, 1, 65528, 1441793, 65534, 65528, 655361, 65534, 65527, 655363, 0, 65525, 1, 65535, 65525, 1048577, 65533, 65527, 655360, 65532, 65527, 655360, 65531, 65527, 655360, 65533, 65526, 0, 65532, 65526, 0, 65531, 65526, 0, 65534, 65526, 0, 2, 65526, 0, 2, 65528, 655360, 3, 65528, 655364, 3, 65526, 5, 2, 65527, 2, 3, 65527, 2, 4, 65527, 2, 5, 65527, 2, 6, 65527, 2, 4, 65526, 0, 4, 65528, 655360, 5, 65528, 655365, 6, 65528, 655360, 5, 65526, 5, 6, 65526, 0, 7, 65526, 5, 7, 65528, 655365, 7, 65527, 655362, 8, 65528, 655363, 8, 65526, 1048579, 8, 65525, 1048577, 8, 65529, 655361, 8, 65527, 655362, 9, 65529, 1441793, 9, 65528, 1441795, 9, 65527, 2, 9, 65526, 3, 9, 65525, 1, 10, 65527, 2, 11, 65527, 2, 12, 65527, 2, 13, 65527, 2, 13, 65528, 655360, 14, 65528, 655360, 14, 65527, 2, 10, 65528, 655360, 11, 65528, 655360, 12, 65528, 655360, 10, 65526, 0, 11, 65526, 0, 12, 65526, 0, 13, 65526, 0, 14, 65526, 0, 15, 65527, 1441792, 15, 65528, 1441793, 15, 65526, 1, 3, 65529, 655360, 5, 65529, 655360, 7, 65529, 655360, 3, 65525, 0, 5, 65525, 0, 7, 65525, 0, 4, 65529, 655360, 2, 65529, 655360, 6, 65529, 655360, 6, 65525, 0, 4, 65525, 0, 2, 65525, 0, 65530, 65527, 655361, 65530, 65526, 1048577, 65535, 3, 1048576, 65535, 4, 1048576, 65535, 5, 1048576, 0, 3, 1441792, 0, 4, 1441792, 0, 5, 1441792, 0, 6, 1441792, 0, 7, 1441792, 0, 8, 1441792, 0, 9, 1441792, 0, 10, 1441792, 0, 11, 1441792, 0, 12, 1441796, 0, 13, 1441792, 65535, 6, 1048576, 65535, 7, 1048581, 65535, 8, 1048576, 65535, 9, 1048576, 65535, 10, 1048576, 65535, 11, 1048576, 65535, 12, 1048576, 65535, 13, 1048576, 0, 14, 1441792, 0, 15, 1441792, 0, 16, 1441792, 0, 17, 1441792, 0, 18, 1441792, 0, 19, 1441792, 0, 20, 1441792, 0, 21, 1441792, 0, 22, 1441792, 0, 23, 1441792, 0, 24, 1441792, 0, 25, 1441792, 65535, 14, 1048576, 65535, 15, 1048576, 65535, 16, 1048576, 65535, 17, 1048576, 65535, 18, 1048576, 65535, 19, 1048576, 65535, 20, 1048576, 65535, 21, 1048576, 65535, 22, 1048576, 65535, 23, 1048581, 65535, 25, 1048576, 65535, 26, 1048579, 65535, 27, 655365, 0, 27, 655365, 65534, 27, 655361, 1, 27, 1441793, 1, 26, 1, 65534, 26, 1048577, 65535, 24, 1048576, 0, 26, 3)
+}
+metadata/_editor_floor_ = Vector3(0, 0, 0)
+
+[node name="torches" type="Node" parent="WorldEnvironment"]
+
+[node name="torch" parent="WorldEnvironment/torches" instance=ExtResource("6_yenlt")]
+transform = Transform3D(-0.251121, 0, -0.044311, 0, 0.255, 0, 0.044311, 0, -0.251121, -3.89491, 2.00033, -3.91627)
+
+[node name="torch2" parent="WorldEnvironment/torches" instance=ExtResource("6_yenlt")]
+transform = Transform3D(-0.251121, 0, -0.044311, 0, 0.255, 0, 0.044311, 0, -0.251121, 4.01307, 1.99325, -3.93607)
+
+[node name="torch3" parent="WorldEnvironment/torches" instance=ExtResource("6_yenlt")]
+transform = Transform3D(-0.0136657, 0, 0.254634, 0, 0.255, 0, -0.254634, 0, -0.0136657, 9.65427, 2.07155, 2.21403)
+
+[node name="torch4" parent="WorldEnvironment/torches" instance=ExtResource("6_yenlt")]
+transform = Transform3D(0.254339, 0, 0.0183473, 0, 0.255, 0, -0.0183473, 0, 0.254339, 2.63556, 2.07155, 3.72162)
+
+[node name="torch5" parent="WorldEnvironment/torches" instance=ExtResource("6_yenlt")]
+transform = Transform3D(0.25413, 0, -0.0210451, 0, 0.255, 0, 0.0210451, 0, 0.25413, -2.95773, 2.07155, 3.79131)
+
+[node name="torch6" parent="WorldEnvironment/torches" instance=ExtResource("6_yenlt")]
+transform = Transform3D(-0.00505103, 0, -0.25495, 0, 0.255, 0, 0.25495, 0, -0.00505103, -9.88532, 2.07155, 2.21403)
+
+[node name="flames" type="Node" parent="WorldEnvironment/torches"]
+
+[node name="torch7" parent="WorldEnvironment/torches" instance=ExtResource("6_yenlt")]
+transform = Transform3D(0.254084, 0, -0.00447941, 0, 0.254123, 0, 0.00447941, 0, 0.254084, -10.6163, 1.80577, -16.0558)
+
+[node name="torch8" parent="WorldEnvironment/torches" instance=ExtResource("6_yenlt")]
+transform = Transform3D(-0.254084, 0, 0.00447943, 0, 0.254123, 0, -0.00447943, 0, -0.254084, -10.6163, 1.80577, -19.8967)
+
+[node name="hand" parent="WorldEnvironment" instance=ExtResource("5_2swun")]
+transform = Transform3D(0.013457, 0, -0.11421, 0, 0.115, 0, 0.11421, 0, 0.013457, 3.48607, -0.879879, -17.1007)
+
+[node name="BIGhand" parent="WorldEnvironment" instance=ExtResource("7_h7v8g")]
+transform = Transform3D(0.519206, 0, -0.106417, -0.0160637, 0.523927, -0.0783744, 0.105198, 0.0800036, 0.513257, 17.7493, 0.169158, -14.23)
+
+[node name="chest" parent="WorldEnvironment" instance=ExtResource("8_ox4xv")]
+transform = Transform3D(0.0462836, 0, 0.367094, 0, 0.37, 0, -0.367094, 0, 0.0462836, -11.0396, 0, -18.4988)
+
+[node name="Player" parent="." instance=ExtResource("1_b3hlt")]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.50591, 0)
+light_color = Color(0.921569, 0.839216, 0.670588, 1)
+light_energy = 1.8
+spot_range = 11.1363
+spot_angle = 42.8906
+
+[node name="FloatingTooltip" parent="." instance=ExtResource("9_fcse5")]
+transform = Transform3D(-7.45058e-09, 0, 0.4, 0, 0.4, 0, -0.4, 0, -7.45058e-09, -10.409, 2.07104, -18.18)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.0814247, 0.159697, 0.983802, 0.00388839, 0.987022, -0.160541, -0.996672, 0.0168974, 0.0797469, -8.26399, 1.61433, -18.0276)
+fov = 115.845
+
+[node name="jump2" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0645, 0)
+script = ExtResource("10_u3i0o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="jump2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0475769, 1.17843, 50.9044)
+shape = SubResource("BoxShape3D_qb5es")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="jump2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.69958, 0, 49.2553)
+stream = ExtResource("11_qxrlk")
+volume_db = 11.4
+unit_size = 3.17
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.11969, 0)
+stream = ExtResource("12_fq7s2")
+volume_db = -3.805
+unit_size = 11.81
+max_db = 1.923
+autoplay = true
+
+[node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.91932, -21.0817)
+stream = ExtResource("12_fq7s2")
+volume_db = -3.805
+unit_size = 11.81
+max_db = 1.923
+autoplay = true
+
+[node name="AudioStreamPlayer3D3" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.91932, 39.3051)
+stream = ExtResource("12_fq7s2")
+volume_db = -3.805
+unit_size = 11.81
+max_db = 1.923
+autoplay = true
+
+[connection signal="body_entered" from="jump2" to="jump2" method="_on_body_entered"]
